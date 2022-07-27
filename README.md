@@ -13,7 +13,6 @@ Contributions welcome! :handshake:
 
 ![python](https://img.shields.io/pypi/pyversions/cargparse)
 ![pypi version](https://img.shields.io/pypi/v/cargparse)
-![license](https://img.shields.io/pypi/l/cargparse)
 [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Installation
