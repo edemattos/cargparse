@@ -23,7 +23,7 @@ description = "Configuration file parsing with argparse."
 name = "cargparse"
 readme = "README.md"
 requires-python = ">=3.7"
-version = "0.0.7"
+version = "0.0.8"
 
 [project.urls]
 "Homepage" = "https://github.com/edemattos/cargparse"
