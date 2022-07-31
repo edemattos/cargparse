@@ -3,5 +3,3 @@ isort
 mypy
 pre-commit
 pytest
-pyyaml
-types-pyyaml

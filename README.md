@@ -1,6 +1,6 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/edemattos/temp/main/cargparse.svg?token=GHSAT0AAAAAABWMSZSVUMA4KRHLOBEQTRU6YXFFHJA"></p>
-<p align="center">
+    <img src="https://demattos.io/img/cargparse.svg"><br/><br/>
+    Parse configuration files with <code>argparse</code>.<br/><br/>
     <a href="https://pypi.org/project/cargparse/" target="_blank">
         <img src="https://img.shields.io/pypi/pyversions/cargparse?color=lightgrey" alt="Python version">
     </a>
@@ -12,23 +12,45 @@
     </a>
 </p>
 
-Parse configuration files with `argparse`. Built-in support for type validation and argument nesting.
-
-[Contributions](/CONTRIBUTING.md) and [feedback](https://github.com/edemattos/cargparse/issues)
-welcome! 🤝
-
 ## Supported file types
 
-Files are safely loaded and validated with tried and tested libraries.
-
-| type     | validator      | third-party | note                                   |
-|----------|----------------|:-----------:|----------------------------------------|
-|          | `argparse`     | no          |                                        |
-| `cfg`    | `configparser` | no          |                                        |
-| `ini`    | `configparser` | no          |                                        |
-| `json`   | `json`         | no          |                                        |
-| `toml`   | `toml`         | yes         | `tomllib` is built-in from Python 3.11 |
-| `yaml`   | `pyyaml`       | yes         |                                        |
+<table align="center">
+    <tr>
+        <td align="center" width=75px></td>
+        <td align="center" width=100px>type</td>
+        <td align="center" width=200px>reader</td>
+        <td align="center" width=200px>third-party</td>
+        <td align="center" width=400px>note</td>
+    </tr>
+    <tr>
+        <td align="center">✅</td>
+        <td align="center"><code>cfg/ini</code></td>
+        <td align="center"><code><a href="https://docs.python.org/3/library/configparser.html">configparser</a></code></td>
+        <td align="center">no</td>
+        <td align="center">Supports custom <code>ConfigParser</code> reader</td>
+    </tr>
+    <tr>
+        <td align="center">✅</td>
+        <td align="center"><code>json</code></td>
+        <td align="center"><code><a href="https://docs.python.org/3/library/json.html">json</a></code></td>
+        <td align="center">no</td>
+        <td align="center"></td>
+    </tr>
+    <tr>
+        <td align="center">✅</td>
+        <td align="center"><code>toml</code></td>
+        <td align="center"><code><a href="https://pypi.org/project/tomli/">tomli</a></code>/<code><a href="https://docs.python.org/3.11/library/tomllib.html">tomllib</a></code></td>
+        <td align="center">yes/no</td>
+        <td align="center"><code>tomllib</code> is built-in from Python 3.11 and was based on <code>tomli</code></td>
+    </tr>
+    <tr>
+        <td align="center">✅</td>
+        <td align="center"><code>yaml</code></td>
+        <td align="center"><code><a href="https://pypi.org/project/PyYAML/">pyyaml</a></code></td>
+        <td align="center">yes</td>
+        <td align="center"></td>
+    </tr>
+</table>
 
 ## Installation
 
@@ -38,37 +60,38 @@ pip install cargparse
 
 ## Basic usage
 
-Given  `config.yaml`...
+Given  `config.yaml`:
 
 ```yaml
 text: hello world
-decimal: 0.5
-boolean: False
+number: 42
 ```
 
-...just use `argparse` as you normally would...
+Use `argparse` as you normally would for command line arguments!
 
 ```python
 import argparse
 import cargparse
+import sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--text', type=str)
+parser.add_argument('--text', type=str, required=True)
+parser.add_argument('--number', type=int, required=True)
 parser.add_argument('--decimal', type=float)
-parser.add_argument('--boolean', type=lambda x: eval(x))
-config = cargparse.Parser(parser).parse_file('config.yaml')
+config = cargparse.Cargparse(parser).parse_file(sys.argv[1])
 ```
 
-...to get the familiar `Namespace` object!
-
 ```
+python test.py config.yaml
 >> config
-Namespace(text='hello world', decimal=0.5, boolean=False)
+{'text': 'hello world', 'number': 42)
 >> config.text
 'hello world'
->> type(config.decimal)
-<class 'float'>
+>> type(config.number)
+<class 'int'>
 ```
+
+⚠️ Read the [documentation]() for more information about type validation.
 
 ## Advanced usage
 
@@ -84,45 +107,47 @@ model:
   summary: True
 ```
 
-Define a helper function to parse each nested dictionary `args`, which is a valid dictionary `str`.
+Define a helper function to parse each nested section `args`, which is interpreted as a dictionary `str`.
 
 ```python
+from __future__ import annotations
+
 def parse_config(filename: Path | str) -> cargparse.Namespace:
 
     def model_namespace(args: str) -> cargparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument('--cnn', type=cnn_namespace)
         parser.add_argument('--lstm', type=lstm_namespace)
-        parser.add_argument('--summary', type=lambda x: eval(x))
-        return cargparse.Parser(parser).parse_args(args)
+        parser.add_argument('--summary', type=cargparse.boolean)
+        return cargparse.Cargparse(parser).parse_dict(args)
 
     def cnn_namespace(args: str) -> cargparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument('--in_channels', type=int, required=True)
         parser.add_argument('--out_channels', type=int, required=True)
         parser.add_argument('--kernel_width', type=int, required=True)
-        return cargparse.Parser(parser).parse_args(args)
+        return cargparse.Cargparse(parser).parse_dict(args)
 
     def lstm_namespace(args: str) -> cargparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument('--input_size', type=int, required=True)
-        parser.add_argument('--hidden_size', type=lambda x: eval(x), required=True)
-        return cargparse.Parser(parser).parse_args(args)
+        parser.add_argument('--hidden_size', type=cargparse.list_int, required=True)
+        return cargparse.Cargparse(parser).parse_dict(args)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=model_namespace, required=True)
-    return cargparse.Parser(parser).parse_file(filename)
+    return cargparse.Cargparse(parser).parse_file(filename)
 
 if __name__ == '__main__':
     config = parse_config(filename=sys.argv[1])
 ```
 
-Nested dictionaries are `Namespace` objects, too! 🌈
-
 ```
 >> config.model.cnn
 >> config.model.lstm.hidden_units
-*** AttributeError: hidden_units not in namespace: ['input_size', 'hidden_size']
+*** AttributeError: hidden_units not in namespace: ['hidden_size', 'input_size']
 >> config.model.lstm.hidden_size
 [128, 64]
 ```
+
+⚠️ Read the [documentation]() for more information about type validation.
