@@ -16,7 +16,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["pyyaml", "tomli"]
 description = "Configuration file parsing with argparse."
 name = "cargparse"
 readme = "README.md"
