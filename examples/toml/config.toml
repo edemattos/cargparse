@@ -1,0 +1,22 @@
+[project.urls]
+homepage = "https://github.com/edemattos/cargparse"
+bug_tracker = "https://github.com/edemattos/cargparse/issues"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+]
+markers = [
+    "darwin",
+    "linux",
+    "win32",
+    "slow"
+]
+log_level = "INFO"
+
+
+[tool.black]
+line_length = 120
+
+[tool.isort]
+profile = "black"

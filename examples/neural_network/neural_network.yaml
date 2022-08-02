@@ -1,0 +1,27 @@
+cuda: True
+
+model:
+  cnn:
+    in_channels: 1
+    out_channels: 1
+    kernel_width: 2
+  lstm:
+    input_size: 100
+    hidden_size:
+      - 128
+      - 64
+    dropout: 0.5
+    bidirectional: True
+
+train:
+  input_dir: ~/my_project/data/train_data/
+  label_dir: ~/my_project/data/train_labels/
+  learning_rate: 0.01
+  max_epochs: 100
+  optimizer: [Adam, SGD]
+  batch_size: [64, 128]
+
+test:
+  input_dir: ~/my_project/data/test_data/
+  label_dir: ~/my_project/data/test_labels/
+  confusion_matrix: True

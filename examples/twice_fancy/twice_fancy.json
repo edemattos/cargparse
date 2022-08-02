@@ -1,0 +1,49 @@
+{
+    "title": "Fancy",
+    "artist": "TWICE",
+    "label": "JYP Entertainment",
+    "genre": [
+        "electropop",
+        "k-pop"
+    ],
+    "duration": "3:35",
+    "release date": "2019 04 22",
+    "members": [
+        {
+            "name": "Jihyo",
+            "dob": "1997 02 01"
+        },
+        {
+            "name": "Nayeon",
+            "dob": "1995 09 22"
+        },
+        {
+            "name": "Jeongyeon",
+            "dob": "1996 11 01"
+        },
+        {
+            "name": "Momo",
+            "dob": "1996 11 09"
+        },
+        {
+            "name": "Sana",
+            "dob": "1996 12 29"
+        },
+        {
+            "name": "Mina",
+            "dob": "1997 03 24"
+        },
+        {
+            "name": "Dahyun",
+            "dob": "1998 05 28"
+        },
+        {
+            "name": "Chaeyoung",
+            "dob": "1999 04 23"
+        },
+        {
+            "name": "Tzuyu",
+            "dob": "1999 06 14"
+        }
+    ]
+}
